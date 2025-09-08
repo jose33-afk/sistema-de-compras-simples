@@ -1,0 +1,22 @@
+{
+  "produtos": [
+    {
+      "id":"1",
+      "produto": "Arroz",
+      "preco": "10,44$",
+      "quantidade": "4"
+    },
+    {
+      "id":"2",
+      "produto": "Feijao",
+      "preco": "12,44$",
+      "quantidade": "2"
+    },
+    {
+      "id":"3",
+      "produto": "Macarrao",
+      "preco": "5,44$",
+      "quantidade": "7"
+    }
+  ]
+}

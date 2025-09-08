@@ -1,0 +1,26 @@
+{
+  "name": "sistema-de-compras-simples",
+  "version": "1.0.0",
+  "description": "Sistema de mercado simples",
+  "homepage": "https://github.com/jose33-afk/sistema-de-compras-simples#readme",
+  "bugs": {
+    "url": "https://github.com/jose33-afk/sistema-de-compras-simples/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jose33-afk/sistema-de-compras-simples.git"
+  },
+  "license": "ISC",
+  "author": "jose33-afk",
+  "type": "module",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "@eslint/js": "9.35.0",
+    "@eslint/json": "0.13.2",
+    "eslint": "9.35.0",
+    "globals": "16.3.0"
+  }
+}
