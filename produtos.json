@@ -4,7 +4,7 @@
       "id":"1",
       "produto": "Arroz",
       "preco": "10,44$",
-      "quantidade": "4"
+      "quantidade": "2"
     },
     {
       "id":"2",
@@ -17,6 +17,12 @@
       "produto": "Macarrao",
       "preco": "5,44$",
       "quantidade": "7"
+    },
+    {
+      "id":"4",
+      "produto": "Ervilha",
+      "preco": "6,44$",
+      "quantidade": "9"
     }
   ]
 }
