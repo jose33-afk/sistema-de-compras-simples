@@ -1,25 +1,25 @@
 {
   "produtos": [
     {
-      "id":"1",
+      "id": "1",
       "produto": "Arroz",
       "preco": "10,44$",
-      "quantidade": "2"
+      "quantidade": "0"
     },
     {
-      "id":"2",
+      "id": "2",
       "produto": "Feijao",
       "preco": "12,44$",
-      "quantidade": "2"
+      "quantidade": "0"
     },
     {
-      "id":"3",
+      "id": "3",
       "produto": "Macarrao",
       "preco": "5,44$",
-      "quantidade": "7"
+      "quantidade": "6"
     },
     {
-      "id":"4",
+      "id": "4",
       "produto": "Ervilha",
       "preco": "6,44$",
       "quantidade": "9"

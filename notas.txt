@@ -1,0 +1,33 @@
+
+/*
+ 1 - readfile so entende txt, por isso converte primeiro, pra depois transformar um arquivo txt em forma de json em obj.
+ 2 - Tem que ficar aqui, se ele ficar fora ele fica funcionando e n finaliza o programa msm n chamando a funcao principal.
+ 3 - Tem um segundo parametro pra caso der erro new Promise((resolve, reject) => {calback});
+    function lerArquivo(nome) {
+    return new Promise((resolve, reject) => {
+        fs.readFile(nome, (err, data) => {
+            if (err) {
+                reject(err); // Deu erro
+            } else {
+                resolve(data); // Deu certo
+            }
+        });
+    });
+
+    SetTimeout so funcina uma vez, e resolve e como se fosse a funcao, lembra setTimeOut(calback, delay);
+  }
+
+  4 - Objetos: truthy ✅
+      Arrays: truthy ✅
+      Funções: truthy ✅
+      null: falsy ❌ (única exceção "objeto")
+    
+  5 - writeFile("./produtos.json", JSON.stringify(dados, null, 2)) - Primeiro parametro:caminho do arquivo, Segundo:conteudo a ser salvo.
+      JSON.stringify(dados, null, 2) - Converte o objeto js de volta pra texto json. null funcao replacer(nao estamos usando), 2 - numero
+      de espaços pra indentaçao.
+
+  6 - find() com objs criar uma referencia, assim dando pra modificar o valor da chave, ja com arrays ele cria uma copia msm.
+      metodo pra modificar uma array:
+        let indice = lista.findIndex(produto => produto === 'arroz'); - ele procura um valor e retorna o indece.
+        lista[indice] = 'macarrao';
+*/
