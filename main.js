@@ -8,6 +8,7 @@ function principal() {
   const carrinho = [];
   let conteudo;
   let dados;
+  let interfacemain = false;
 
   async function regarregarFile() {
     conteudo = await readFile("./produtos.json", "utf-8"); //1
@@ -30,18 +31,16 @@ function principal() {
           { name: "Finalizar compra", value:"4"},
           { name: "Cancelar", value:"5" },
         ],
-        theme: {
-          helpMode: "never" //tira a dica
-        }
+        theme: { helpMode: "never" } //remove a dica.
       });
 
       if (answer === "5") {
         console.log("Usuário cancelou");
         return;
       } else if (answer === "1") {
-        delay(verProdutos, 500);
+        interfacemain = true;
+        delay(verProdutos, 500)
         interfaceMercado();
-        console.clear();
       } else if (answer === "2") delay(addProduto, 500);
          else if (answer === "3") {
            if (carrinho.length > 0) mostrarCarrinho();
@@ -49,9 +48,7 @@ function principal() {
             console.log(chalk.red("Você ainda n adicionou Produtos ao Carrinho!"));
             interfaceMercado();
            } 
-         }
-         
-
+         } 
     } catch (error) {
       if (error.name === "ExitPromptError") {
         console.log(chalk.red("Operacao cancelada!"));
@@ -59,31 +56,11 @@ function principal() {
       }
       throw error; //pra mostar os outros erros.
     }
-
-    /*while (true) {
-      menu();
-      let opcSelec = await rl.question(": ");
-
-      if (opcSelec === "5") {
-        rl.close();
-        break;
-      } else if (opcSelec === "1") {
-        verProdutos();
-      } else if (opcSelec === "2") {
-        addProduto();
-        break;
-      } else if (opcSelec === "3") {
-        if (carrinho.length > 0) {
-          mostrarCarrinho();
-          break;
-        } else {
-          console.log(chalk.red("Você ainda n adicionou Produtos ao Carrinho!"));
-        }
-      }
-    }*/
   }
 
   function verProdutos() {
+    console.clear()
+    if (interfacemain) console.log("clique nas setas para voltar ao menu");
     console.log(`\n${"=".repeat(28)}`);
     dados.produtos.forEach((produto) => {
       console.log(
@@ -93,19 +70,22 @@ function principal() {
       );
     });
     console.log(`${"=".repeat(28)}`);
+    interfacemain = false;
   }
 
   async function addProduto() {
+    console.clear()
     const rl = readline.createInterface(input, output);
     let quantidadeProduts = dados.produtos.length;
     let opc = 0;
-    console.log(`${"=".repeat(28)}\n`);
-    console.log(`Selecione o numero do produto de 1 a ${quantidadeProduts}:\n`);
+    console.log(`${"=".repeat(28)}`);
+    console.log(`Selecione o numero do produto de 1 a ${quantidadeProduts} (aperte 0 pra lista de produtos):`);
 
     while (true) {
       opc = await rl.question("Numero do produto:");
       if (opc >= 1 && opc <= quantidadeProduts) {
         let estoqueStatus = "Adicionando ao Carrinho..";
+        let stoqueOK = false;
         let produtoAchado = dados.produtos.find(
           (produto) => produto.id === opc
         );
@@ -125,23 +105,31 @@ function principal() {
           if (quantidadeOriginal > 0) {//Adicionar 1+
             removeQuantidade();
             carrinhoEncontrado.quantidade += 1;
+            stoqueOK = true;
           } else estoqueStatus = "Acabou o Estoque de";
         } else {//Primeira vez.
           if (quantidadeOriginal > 0) {
             removeQuantidade();
             carrinho.push({id: produtoAchado.id, nome: produtoAchado.produto, preco: produtoAchado.preco, quantidade: 1,});
-          } else estoqueStatus = "Acabou o Estoque de";
+            stoqueOK = true;
+          } else {
+            estoqueStatus = "Acabou o Estoque de"
+          
+          };
         }
-
+ 
+        verProdutos(); //Primeira vez.
         console.log(chalk.yellow(`${estoqueStatus} ${produtoAchado.produto}`));
-        rl.close()
-        delay(interfaceMercado, 1000);
-        break;
+
+        if (stoqueOK) {
+          rl.close()
+          delay(interfaceMercado, 1000);
+          break;
+        }
+        
       } else {
-        console.log(
-          chalk.red("Selecione um produto EXISTENTE!\nLista de produtos")
-        );
         verProdutos();
+        if (opc != 0) console.log(chalk.red("Selecione um produto EXISTENTE!"));
       }
     }
   }
@@ -163,19 +151,44 @@ function principal() {
         );
       }
     };
-
     menuMercado()
-    delay(interfaceMercado, 1000);
-    
+
+    const opc = await select({
+      message:"Selecione uma opcao:",
+      choices:[
+        { name:chalk.green("[1] Voltar pro menu"), value:"1"},
+        { name:chalk.red("[2] Remover um produto?"), value:"2"}
+      ],
+      theme: { helpMode: "never"}
+    })
+
+    async function criarMenuRemover() {
+      let opcaoes = [];
+      for (let item of carrinho) {
+        opcaoes.push({ name:chalk.yellow(`Produto:${item.nome}, Valor:${item.preco}, Quantidade:${item.quantidade}`), value:item.id})
+      }
+       return await select({
+        message:"Selecione o produto",
+        choices:opcaoes,
+        theme: { helpMode: "never" }
+       });
+    }
+
+    if (opc === "1") delay(interfaceMercado, 500);
+    else {
+      console.log(`${"=".repeat(28)}\n`);
+      console.log(await criarMenuRemover())
+    }
+      
     /*menuMercado();
-    console.log(chalk.green("[1] Voltar pro menu"));
-    console.log(chalk.red("[2] Remover um produto?"));
+    console.log(chalk.green());
+    console.log();
     let opc = await rl.question("Opcao:");
 
     if (opc === "1") {
       delay(interfaceMercado, 1000);
     } else {
-      console.log(`${"=".repeat(28)}\n`);
+      
       menuMercado();
 
       let par = 0;
