@@ -10,19 +10,19 @@
       "id": "2",
       "produto": "Feijao",
       "preco": "12,44$",
-      "quantidade": "0"
+      "quantidade": "99"
     },
     {
       "id": "3",
       "produto": "Macarrao",
       "preco": "5,44$",
-      "quantidade": "6"
+      "quantidade": "98"
     },
     {
       "id": "4",
       "produto": "Ervilha",
       "preco": "6,44$",
-      "quantidade": "9"
+      "quantidade": "106"
     }
   ]
 }
