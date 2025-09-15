@@ -3,26 +3,26 @@
     {
       "id": "1",
       "produto": "Arroz",
-      "preco": "10,44$",
+      "preco": "10.44",
       "quantidade": "0"
     },
     {
       "id": "2",
       "produto": "Feijao",
-      "preco": "12,44$",
-      "quantidade": "90"
+      "preco": "12.44",
+      "quantidade": "57"
     },
     {
       "id": "3",
       "produto": "Macarrao",
-      "preco": "5,44$",
-      "quantidade": "80"
+      "preco": "5.44",
+      "quantidade": "64"
     },
     {
       "id": "4",
       "produto": "Ervilha",
-      "preco": "6,44$",
-      "quantidade": "89"
+      "preco": "6.44",
+      "quantidade": "76"
     }
   ]
 }

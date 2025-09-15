@@ -1,7 +1,7 @@
 import { readFile, writeFile } from "node:fs/promises";
 import readline from "node:readline/promises"; //Esse funciona com await.
 import { stdin as input, stdout as output } from "node:process";
-import { select } from "@inquirer/prompts";
+import { select, confirm, number} from "@inquirer/prompts";
 import chalk from "chalk";
 
 function principal() {
@@ -41,14 +41,21 @@ function principal() {
         interfacemain = true;
         delay(verProdutos, 500)
         interfaceMercado();
-      } else if (answer === "2") delay(addProduto, 500);
-         else if (answer === "3") {
-           if (carrinho.length > 0) mostrarCarrinho();
-           else {
+      } else if (answer === "2") {
+        delay(addProduto, 500)
+      } else if (answer === "3") {
+          if (carrinho.length > 0) mostrarCarrinho();
+          else {
             console.log(chalk.red("Você ainda n adicionou Produtos ao Carrinho!"));
             interfaceMercado();
-           } 
-         } 
+          } 
+      } else if (answer === "4") {
+          if (carrinho.length > 0) finalizar();
+          else {
+            console.log(chalk.red("Você ainda n adicionou Produto ao Carrinho!"));
+            interfaceMercado();
+          } 
+      }
     } catch (error) {
       if (error.name === "ExitPromptError") {
         console.log(chalk.red("Operacao cancelada!"));
@@ -65,7 +72,7 @@ function principal() {
     dados.produtos.forEach((produto) => {
       console.log(
         chalk.cyan(
-          `[${produto.id}] - ${produto.produto}, preco:${produto.preco}, estoque:${produto.quantidade}`
+          `[${produto.id}] - ${produto.produto}, preco:${produto.preco}R$, estoque:${produto.quantidade}`
         )
       );
     });
@@ -109,8 +116,7 @@ function principal() {
             carrinho.push({id: produtoAchado.id, nome: produtoAchado.produto, preco: produtoAchado.preco, quantidade: 1,});
             stoqueOK = true;
           } else {
-            estoqueStatus = "Acabou o Estoque de"
-          
+            estoqueStatus = "Acabou o Estoque de";
           };
         }
  
@@ -122,7 +128,6 @@ function principal() {
           delay(interfaceMercado, 1000);
           break;
         }
-        
       } else {
         verProdutos();
         if (opc != 0) console.log(chalk.red("Selecione um produto EXISTENTE!"));
@@ -130,26 +135,22 @@ function principal() {
     }
   }
 
+  function menuMercado() {
+    for (let item of carrinho) {
+      console.log(chalk.yellow(`Produto:${item.nome},Valor ${item.preco}R$, Quantidade:${item.quantidade}`));
+    }
+  };
+
   async function mostrarCarrinho() {
     console.log(`${"=".repeat(28)}\n`);
     console.log(chalk.yellow("Carrinho:"));
-
-    const menuMercado = () => {
-      for (let item of carrinho) {
-        console.log(
-          chalk.yellow(
-            `[${item.id}]Produto:${item.nome},Valor ${item.preco}, Quantidade:${item.quantidade}`
-          )
-        );
-      }
-    };
     menuMercado()
 
     const opc = await select({
       message:"Selecione uma opcao:",
       choices:[
-        { name:chalk.green("[1] Voltar pro menu"), value:"1"},
-        { name:chalk.red("[2] Remover um produto?"), value:"2"}
+        { name:chalk.green("Voltar pro menu"), value:"1"},
+        { name:chalk.red("Remover um produto?"), value:"2"}
       ],
       theme: { helpMode: "never"}
     })
@@ -157,7 +158,7 @@ function principal() {
     async function criarMenuRemover() {
       let opcaoes = [];
       for (let item of carrinho) {
-        opcaoes.push({ name:chalk.yellow(`Produto:${item.nome}, Valor:${item.preco}, Quantidade:${item.quantidade}`), value:item.id})
+        opcaoes.push({ name:chalk.yellow(`Produto:${item.nome}, Valor:${item.preco}R$, Quantidade:${item.quantidade}`), value:item.id})
       }
        return await select({
         message:"Selecione o produto",
@@ -187,6 +188,40 @@ function principal() {
       regarregarFile();
 
       delay(interfaceMercado, 500);
+    };
+  };
+
+  async function finalizar() {
+    let valorTotal = 0;
+    menuMercado();
+    if (carrinho.length === 1) {
+      if (carrinho[0].quantidade > 1) {
+        valorTotal = Number(carrinho[0].preco) * carrinho[0].quantidade;
+      } else valorTotal = carrinho[0].preco;
+
+    } else {
+      for (let item of carrinho) {
+        if (item.quantidade > 1) {
+          item.preco = Number(item.preco) * item.quantidade;
+        }
+        valorTotal += Number(item.preco);
+      }
+    };
+
+    console.log(chalk.green(`${"-".repeat(28)}`));
+    console.log(chalk.green(`Valor total a pagar ${valorTotal}R$`));
+    console.log(chalk.green(`${"-".repeat(28)}`));
+
+    const resp = await confirm({
+      message:"Confirmar compra:",
+      default:false, 
+      transformer: (answer) => answer ? '✅ Sim':'❌ Não' //muda o no e yes
+    });
+
+    if (resp) console.log("voce finalizou a compra");//por uma mesagem de finalizacao de compra 
+    else {
+      console.log(chalk.red("Voce cancelou a finalizacao voltando pro menu principal"));
+      delay(interfaceMercado, 500);
     }
   }
 }
@@ -196,5 +231,6 @@ function delay(fun, ms) {
   setTimeout(fun, ms);
 }
 
+//inicio.
 console.log(chalk.magenta("Mercado"));
 principal();
