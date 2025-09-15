@@ -1,7 +1,7 @@
 import { readFile, writeFile } from "node:fs/promises";
 import readline from "node:readline/promises"; //Esse funciona com await.
 import { stdin as input, stdout as output } from "node:process";
-import { select, confirm, number} from "@inquirer/prompts";
+import { select, confirm } from "@inquirer/prompts";
 import chalk from "chalk";
 
 function principal() {
@@ -194,7 +194,7 @@ function principal() {
   async function finalizar() {
     let valorTotal = 0;
     menuMercado();
-    if (carrinho.length === 1) {
+    if (carrinho.length === 1) { //Um produto no carrinho
       if (carrinho[0].quantidade > 1) {
         valorTotal = Number(carrinho[0].preco) * carrinho[0].quantidade;
       } else valorTotal = carrinho[0].preco;
@@ -209,7 +209,7 @@ function principal() {
     };
 
     console.log(chalk.green(`${"-".repeat(28)}`));
-    console.log(chalk.green(`Valor total a pagar ${valorTotal}R$`));
+    console.log(chalk.green(`Valor total a pagar ${valorTotal.toFixed(2)}R$`));
     console.log(chalk.green(`${"-".repeat(28)}`));
 
     const resp = await confirm({
@@ -218,10 +218,19 @@ function principal() {
       transformer: (answer) => answer ? '✅ Sim':'❌ Não' //muda o no e yes
     });
 
-    if (resp) console.log("voce finalizou a compra");//por uma mesagem de finalizacao de compra 
-    else {
-      console.log(chalk.red("Voce cancelou a finalizacao voltando pro menu principal"));
-      delay(interfaceMercado, 500);
+    if (resp) { //Interface de finalizacao de compra.
+      console.log(chalk.green(`${"-".repeat(28)}`));
+      console.log(chalk.yellow("Compra Finalizada!"));
+      console.log(chalk.green("Voce comprou:"));
+      for (let item of carrinho) {
+        console.log(chalk.green(`${item.nome}, unidades:${item.quantidade}`))
+      }
+      console.log(chalk.yellow("Volte Sempre!"));
+      console.log(chalk.green(`${"-".repeat(28)}`));
+
+    } else {
+       console.log(chalk.red("Voce cancelou a finalizacao voltando pro menu principal"));
+       delay(interfaceMercado, 500);
     }
   }
 }
