@@ -86,12 +86,8 @@ function principal() {
       if (opc >= 1 && opc <= quantidadeProduts) {
         let estoqueStatus = "Adicionando ao Carrinho..";
         let stoqueOK = false;
-        let produtoAchado = dados.produtos.find(
-          (produto) => produto.id === opc
-        );
-        let carrinhoEncontrado = carrinho.find(
-          (item) => item.nome === produtoAchado.produto
-        ); //6
+        let produtoAchado = dados.produtos.find((produto) => produto.id === opc);
+        let carrinhoEncontrado = carrinho.find((item) => item.nome === produtoAchado.produto); //6
         let quantidadeOriginal = Number(produtoAchado.quantidade);
 
         async function removeQuantidade() {
@@ -134,10 +130,6 @@ function principal() {
     }
   }
 
-  const removerQuantidade = (idProduto) => {
-    console.log(idProduto);
-  };
-
   async function mostrarCarrinho() {
     console.log(`${"=".repeat(28)}\n`);
     console.log(chalk.yellow("Carrinho:"));
@@ -177,39 +169,25 @@ function principal() {
     if (opc === "1") delay(interfaceMercado, 500);
     else {
       console.log(`${"=".repeat(28)}\n`);
-      console.log(await criarMenuRemover())
+      devolverProduto(await criarMenuRemover());
     }
-      
-    /*menuMercado();
-    console.log(chalk.green());
-    console.log();
-    let opc = await rl.question("Opcao:");
 
-    if (opc === "1") {
-      delay(interfaceMercado, 1000);
-    } else {
-      
-      menuMercado();
+    async function devolverProduto(idProduto) {
+      const index = carrinho.findIndex(produto => produto.id === idProduto);
 
-      let par = 0;
-      while (true) {
-        let existe = 0;
-        opc = await rl.question("Qual produto deseja remover:");
-        for (let item of carrinho) {
-          if (item.id === opc) {
-            existe = 1;
-            break;
-          }
-        }
-        if (existe) break;
-        console.log(chalk.red("[ERRO] opcao n existe!"));
-        if ((par / 2) % 0) menuMercado();
-        par++;
-        console.log(par);
-      }
-      removerQuantidade(opc);
+      if (carrinho[index].quantidade > 0) carrinho[index].quantidade--;
+      if (carrinho[index].quantidade === 0) carrinho.splice(index, 1);
+      
+      //Arquivo.
+      let produtoAchado = dados.produtos.find((produto) => produto.id === idProduto);
+      let quantidadeOriginal = Number(produtoAchado.quantidade);
+      quantidadeOriginal++;
+      produtoAchado.quantidade = quantidadeOriginal.toString();
+      await writeFile("./produtos.json", JSON.stringify(dados, null, 2)); //5
+      regarregarFile();
+
+      delay(interfaceMercado, 500);
     }
-      */
   }
 }
 
